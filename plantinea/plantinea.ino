@@ -16,6 +16,9 @@ int y;
 float b;
 float w;
 
+int luminoso;
+
+
 int button = 7;
 int cont = 1;
 
@@ -43,7 +46,14 @@ byte half[8] = {
   0b11000
 };
 
-
+int conversorpor100(int valor){
+  int p100umidade=0;
+  p100umidade=map(valor,1023,350,0,100);
+  if (p100umidade>100){
+    p100umidade=100;
+  }
+  return p100umidade;
+}
 /* Solo umido - 0 a 400
  * Solo Moderado - 400 - 800
  * Solo seco - 800 - 1024
@@ -53,6 +63,83 @@ byte half[8] = {
  * calculo para transformar a quantidade de agua no recipiente em litros.  
  */
 
+void status_planta (int lcd_value)
+{
+  int p;
+  switch (lcd_value)
+  {
+
+    case 1: // Nivel de agua
+      lcd.clear();
+      lcd.setCursor(1, 0);
+      lcd.print("Nivel de agua:");
+      p = nivel_agua(a);
+      if (p == 1){
+        lcd.setCursor(1, 1);
+        lcd.print("Vazio"); 
+      } else if(p == 2){
+        lcd.setCursor(1, 1);
+        lcd.print("Cheio"); 
+      } else {
+        lcd.setCursor(1, 1);
+        lcd.print(w);
+     
+      }
+      break;
+      
+    case 2: // Umidade
+      lcd.clear();
+      lcd.setCursor(1, 0);
+      lcd.print("Umidade solo:");
+      p = umidade_solo(d);
+      /*
+      if (p == 1){
+        lcd.setCursor(1, 1);
+        lcd.print("Umido "+String(conversorpor100(d))); 
+      } else if(p == 2){
+        lcd.setCursor(1, 1);
+        lcd.print("Moderado "+String(conversorpor100(d))); 
+      } else {
+        lcd.setCursor(1, 1);
+        lcd.print("Seco "+String(conversorpor100(d))); 
+      }
+      */
+      lcd.setCursor(1,1);
+      lcd.print(String(conversorpor100(d))+"%");
+      break;
+      
+    case 3: // Luminosidade
+      lcd.clear();
+      lcd.setCursor(1, 0);
+      lcd.print("Luminosidade:");
+      lcd.setCursor(1,1);
+      if( luz(luminoso)== 1)
+      {
+        lcd.print("baixa");
+      }
+      else if( luz(luminoso)== 2)
+      {
+        lcd.print("mediana");
+      }
+      else if (luz(luminoso)== 3)
+      {
+        lcd.print("alta");
+      }
+      else if (luz(luminoso)==4)
+      {
+        lcd.print("sem condicoes");
+      }
+      delay(500);
+
+      
+      /*
+      lcd.setCursor(1,1);
+      lcd.print(String(luminoso));
+      delay(1000);
+      */
+      break;
+ }
+}
 
  
 void setup() {
@@ -72,6 +159,7 @@ void loop() {
   a = analogRead(A0);//nivel de agua
   d = analogRead(A1);//umidade do solo
   y = digitalRead(button);
+  luminoso=analogRead(A2);
  
  if (y == HIGH){
     delay(200);
@@ -160,67 +248,29 @@ int nivel_agua(int agua){
 }
 
 
-  int temperatura(){
-  
-}
+  int luz(int x)
+  {
+    if(x < 30)
+    {
+      //sem luz
+      return 1;  
+    }
+    else if (x >=30 && x <= 120) 
+    {
+      //luz mediana
+      return 2;
+    }
+    else if(x > 120 && x< 300)
+    {
+      // luz intensa
+      return 3;
+    }
+    else
+    {
+      return 4;
+    }
+    }
 
-void status_planta(int lcd_value){
-  int p;
 
- switch (lcd_value){
 
-    case 1: // Nivel de agua
-      lcd.clear();
-      lcd.setCursor(1, 0);
-      lcd.print("Nivel de agua:");
-      p = nivel_agua(a);
-      if (p == 1){
-        lcd.setCursor(1, 1);
-        lcd.print("Vazio"); 
-      } else if(p == 2){
-        lcd.setCursor(1, 1);
-        lcd.print("Cheio"); 
-      } else {
-        lcd.setCursor(1, 1);
-        lcd.print(w);
-     
-      }
-      break;
-      
-    case 2: // Umidade
-      lcd.clear();
-      lcd.setCursor(1, 0);
-      lcd.print("Umidade solo:");
-      p = umidade_solo(d);
-      /*
-      if (p == 1){
-        lcd.setCursor(1, 1);
-        lcd.print("Umido "+String(conversorpor100(d))); 
-      } else if(p == 2){
-        lcd.setCursor(1, 1);
-        lcd.print("Moderado "+String(conversorpor100(d))); 
-      } else {
-        lcd.setCursor(1, 1);
-        lcd.print("Seco "+String(conversorpor100(d))); 
-      }
-      */
-      lcd.setCursor(1,1);
-      lcd.print(String(conversorpor100(d))+"%");
-      break;
-      
-    case 3: // Luminosidade
-      lcd.clear();
-      lcd.setCursor(1, 0);
-      lcd.print("Luminosidade:");
-      break;
- }
-}
 
-int conversorpor100(int valor){
-  int p100umidade=0;
-  p100umidade=map(valor,1023,350,0,100);
-  if (p100umidade>100){
-    p100umidade=100;
-  }
-  return p100umidade;
-}
