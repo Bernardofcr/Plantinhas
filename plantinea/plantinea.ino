@@ -192,16 +192,20 @@ void status_planta(int lcd_value){
       lcd.setCursor(1, 0);
       lcd.print("Umidade solo:");
       p = umidade_solo(d);
+      /*
       if (p == 1){
         lcd.setCursor(1, 1);
         lcd.print("Umido "+String(conversorpor100(d))); 
       } else if(p == 2){
         lcd.setCursor(1, 1);
-        lcd.print("Moderado "+String(conversorpor100(d)); 
+        lcd.print("Moderado "+String(conversorpor100(d))); 
       } else {
         lcd.setCursor(1, 1);
-        lcd.print("Seco "+String(conversorpor100(d)); 
+        lcd.print("Seco "+String(conversorpor100(d))); 
       }
+      */
+      lcd.setCursor(1,1);
+      lcd.print(String(conversorpor100(d))+"%");
       break;
       
     case 3: // Luminosidade
@@ -213,11 +217,10 @@ void status_planta(int lcd_value){
 }
 
 int conversorpor100(int valor){
-  int p100umidade=0
+  int p100umidade=0;
   p100umidade=map(valor,1023,350,0,100);
-  if (p100umidade>100)
+  if (p100umidade>100){
     p100umidade=100;
-  return p100umidade
+  }
+  return p100umidade;
 }
-
-
