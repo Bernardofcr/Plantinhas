@@ -9,6 +9,7 @@ const float p3 = 15.35;
 const float p4 = 7.229;
 const float p5 = 11.59;
 
+
 int a;
 int d;
 int y;
@@ -68,8 +69,8 @@ void setup() {
 
 void loop() {
  
-  a = analogRead(A0);
-  d = analogRead(A1);
+  a = analogRead(A0);//nivel de agua
+  d = analogRead(A1);//umidade do solo
   y = digitalRead(button);
  
  if (y == HIGH){
@@ -193,22 +194,30 @@ void status_planta(int lcd_value){
       p = umidade_solo(d);
       if (p == 1){
         lcd.setCursor(1, 1);
-        lcd.print("Umido"); 
+        lcd.print("Umido "+String(conversorpor100(d))); 
       } else if(p == 2){
         lcd.setCursor(1, 1);
-        lcd.print("Moderado"); 
+        lcd.print("Moderado "+String(conversorpor100(d)); 
       } else {
         lcd.setCursor(1, 1);
-        lcd.print("Seco"); 
+        lcd.print("Seco "+String(conversorpor100(d)); 
       }
       break;
       
-    case 3: // Temperatura
+    case 3: // Luminosidade
       lcd.clear();
       lcd.setCursor(1, 0);
-      lcd.print("Temperatura:");
+      lcd.print("Luminosidade:");
       break;
  }
+}
+
+int conversorpor100(int valor){
+  int p100umidade=0
+  p100umidade=map(valor,1023,350,0,100);
+  if (p100umidade>100)
+    p100umidade=100;
+  return p100umidade
 }
 
 
