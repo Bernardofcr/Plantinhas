@@ -18,37 +18,13 @@ float b;
 float w;
 
 int luminoso;
-
-
-int button1 = 7;
-int button2 = 8;
+int button1 = 7; // Botão do lcd
+int button2 = 8; // Botão do Motor servo
 int cont = 1;
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
-byte full[8] = {
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111,
-  0b11111
-};
-
-byte half[8] = {
-  0b11000,
-  0b11000,
-  0b11000,
-  0b11000,
-  0b11000,
-  0b11000,
-  0b11000,
-  0b11000
-};
-
-int conversorpor100(int valor){
+int conversorpor100(int valor){     // Converte o valor da umidade e coloca em porcentagem
   int p100umidade=0;
   p100umidade=map(valor,1023,350,0,100);
   if (p100umidade>100){
@@ -65,7 +41,7 @@ int conversorpor100(int valor){
  * calculo para transformar a quantidade de agua no recipiente em litros.  
  */
 
-void status_planta (int lcd_value)
+void status_planta (int lcd_value) // Mostra o status da planta no LCD
 {
   int p;
   switch (lcd_value)
@@ -174,21 +150,16 @@ int nivel_agua(int agua){
     if (agua <= 480){ 
       return 1;
   }
-
     else if (agua > 710){ 
       return 2;
-  }
-  
+  } 
     else { 
       return 3;
-  }
-
-
-  
+  }  
 }
 
 
-  int umidade_solo(int solo ){
+  int umidade_solo(int solo ){  
 
     if (solo > 0 && solo < 400){
         Serial.println("Solo umido");
@@ -205,7 +176,7 @@ int nivel_agua(int agua){
 }
 
 
-  int luz(int x)
+  int luz(int x) // Intensidade da luz no ambiente
   {
     if(x < 30)
     {
@@ -248,7 +219,7 @@ int nivel_agua(int agua){
     }
   }
 
-  void teste_door(int status_button){
+  void teste_door(int status_button){ // Movimenta o motor para liberação da água
     if (status_button == HIGH){
       int c = 0;
       while (c <= 180){
@@ -265,3 +236,5 @@ int nivel_agua(int agua){
        }
     }   
   }
+
+
