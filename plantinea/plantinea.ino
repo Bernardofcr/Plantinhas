@@ -1,3 +1,15 @@
+/*            ***CESAR SCHOOL*** 
+
+       --- PROJETO SISTEMAS DIGITAIS---
+
+              CÓDIGO FEITO POR:
+              BERNARDO RUSSO
+              JACQUELINE KEMPA
+              JONATHAN COUTINHO
+              TIAGO LEAL
+
+*/
+
 #include <LiquidCrystal.h>
 #include <Servo.h>
 
@@ -8,7 +20,6 @@ const float p2 = 16.17;
 const float p3 = 15.35;
 const float p4 = 7.229;
 const float p5 = 11.59;
-
 
 int a;
 int u;
@@ -32,14 +43,6 @@ int conversorpor100(int valor){     // Converte o valor da umidade e coloca em p
   }
   return p100umidade;
 }
-/* Solo umido - 0 a 400
- * Solo Moderado - 400 - 800
- * Solo seco - 800 - 1024
- * 
- * 
- * 
- * calculo para transformar a quantidade de agua no recipiente em litros.  
- */
 
 void status_planta (int lcd_value) // Mostra o status da planta no LCD
 {
@@ -106,10 +109,9 @@ void setup() {
   Serial.begin(9600);
   myservo.attach(9,800,2500); // motor Servo
   lcd.begin(16, 2);
-  lcd.createChar(1, full);
-  lcd.createChar(2, half);
   pinMode(7, INPUT);  // Nível da agua
   pinMode(A1, INPUT); //Sensor de umidade
+  pinMode(button2, INPUT);
 
 }
 
@@ -117,26 +119,27 @@ void loop() {
  
   a = analogRead(A0);//nivel de agua
   u = analogRead(A1);//umidade do solo
-  b1 = digitalRead(button1);
-  b2 = digitalRead(button2);
+  b1 = digitalRead(button1); // Butão do LCD
+  b2 = digitalRead(button2); // Botão da Porta de Agua
   
   luminoso=analogRead(A2);
  
- if (b1 == HIGH){
-    delay(200);
-    cont++;
-    if ( cont > 3){
-      cont = 1;
+   if (b1 == HIGH){
+      delay(200);
+      cont++;
+      if ( cont > 3){
+        cont = 1;
+      }
+      status_planta(cont);
+      Serial.println(cont);
+      delay(50);
+    } else {
+      status_planta(cont);
+      delay(50);
     }
-    status_planta(cont);
-    Serial.println(cont);
-    delay(50);
-  } else {
-    status_planta(cont);
-    delay(50);
-  }
-
-  teste_door(b2);
+  
+    water_door(b2);
+    
   
 
 
@@ -199,35 +202,16 @@ int nivel_agua(int agua){
     }
     }
 
-  void open_door(){
-    int c = 0;
-    while (c <= 180){
-      myservo.write(c);
-      delay(50);
-      c ++;
-    }
-     
-  }
 
-
-  void close_door(){
-    int c = 180;
-    while (c > 1){
-      myservo.write(c);
-      delay(50);
-      c --;
-    }
-  }
-
-  void teste_door(int status_button){ // Movimenta o motor para liberação da água
+  void water_door(int status_button){ // Movimenta o motor para liberação da água
     if (status_button == HIGH){
       int c = 0;
-      while (c <= 180){
+      while (c <= 90){
         myservo.write(c);
         delay(50);
         c ++;
       }
-       if (c = 181){
+       if (c = 90){
         while (c > 1){
           myservo.write(c);
           delay(50);
@@ -236,5 +220,3 @@ int nivel_agua(int agua){
        }
     }   
   }
-
-
